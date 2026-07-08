@@ -228,11 +228,11 @@ Read `references/prompt-patterns.md` for the full set. The critical ones:
    known values — do these in a JS code block after the agent, not in the prompt.
 
 5. **JSON compliance instructions are mandatory.** Always include the JSON output rules from
-   `references/prompt-patterns.md`. Some models add preamble text that breaks Attio's JSON
-   parser.
+   `references/prompt-patterns.md`. Some models add preamble text around JSON that prevents
+   structured output from parsing correctly.
 
-6. **Every field must have a value.** Attio doesn't handle null well in structured output.
-   Instruct the model to use "Unknown" for text and 0 for numbers, never null.
+6. **Every field must have a value.** Instruct the model to use "Unknown" for text and
+   0 for numbers, never null. Null values can cause issues in downstream workflow blocks.
 
 7. **camelCase field names.** Consistent with Attio's API conventions.
 

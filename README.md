@@ -2,16 +2,9 @@
 
 A Claude Code skill for building Custom Agent blocks in Attio workflows.
 
-## The problem
+## Why this exists
 
-Attio's Custom Agent block is powerful but underspecified. The UI gives you five fields -- prompt, output schema, system prompt, model, and tools -- with no guidance on how they interact. So you end up:
-
-- **Guessing at architecture.** Should this be one agent or three? When should you gate with If/Else? When does a code block beat a second agent?
-- **Fighting JSON output.** Some models add preamble text that breaks Attio's JSON parser. You discover this after deploying, not before.
-- **Missing edge cases.** Your classifier works on the obvious cases and fails on the ambiguous ones -- fintech that builds software, holding companies with portfolio signals, sparse websites.
-- **No testing strategy.** You iterate by running the workflow on one record at a time and eyeballing the output. Regressions go unnoticed.
-
-This skill encodes prompt engineering patterns learned from building and iterating on production Attio agents -- structured output ordering, consistency rules, sequential gating, JSON compliance, and edge case handling.
+Building reliable AI agents takes iteration. Getting structured output right, handling edge cases, designing multi-agent workflows, and testing systematically are all hard problems regardless of platform. This skill encodes prompt engineering patterns learned from building and iterating on production Attio agents -- structured output ordering, consistency rules, sequential gating, JSON compliance, and edge case handling -- so you don't have to rediscover them from scratch.
 
 ## What this skill does
 

@@ -297,7 +297,8 @@ _Source: Own iteration — Sonnet 4.6 JSON compliance failure in Attio industry 
 
 ## Null Prevention
 
-Attio does not handle null gracefully in structured output. Always include:
+Null values in structured output can cause issues in downstream workflow blocks (If/Else
+routing, Update Record, code blocks). Always include:
 
 ```
 IMPORTANT: Every field must be a valid string or number. Do not use JSON null for any field.
