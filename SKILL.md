@@ -72,6 +72,20 @@ one agent. Focus on:
 - Where gating saves cost
 - Why you chose to split (or not split) at each boundary
 
+**Proactively flag reuse opportunities.** When an agent needs web access to answer a
+specific question, it's already doing research that could serve other purposes. Flag this:
+
+> "This agent will visit the company's website to determine [X]. While it's there, it's
+> already gathering intelligence that could feed other workflows (e.g., company description,
+> competitive positioning, GTM motion). If you think you'll want that data later, consider
+> splitting into a research agent that saves a full brief + a focused agent that answers
+> your specific question from the brief. This adds cost now but saves re-researching later.
+> If this is the only thing you need, keep it as one agent."
+
+Don't force the split — present it as a tradeoff and let the user decide. Some users are
+building fast for a demo and want to keep moving. Others are building production workflows
+and should invest in the split upfront.
+
 Example format:
 ```
 Proposed workflow (4 blocks):
