@@ -10,7 +10,7 @@ Building reliable AI agents takes iteration. Getting structured output right, ha
 
 Two modes:
 
-- **Plan First** (default) -- Asks questions to understand the full workflow, proposes a multi-block architecture with test cases, then builds each agent one at a time.
+- **Plan First** (default) -- Asks questions to understand the full workflow, proposes an architecture with test cases, then builds each agent block.
 - **Quick Build** -- Skips planning. Minimal questions, then straight to paste-ready output.
 
 For each Custom Agent block, it produces output matching the Attio UI field order:
