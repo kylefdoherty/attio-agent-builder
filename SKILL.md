@@ -52,110 +52,65 @@ Either mode can be overridden per invocation.
 
 ### Plan First (default)
 
-The skill asks deeper questions to understand the full job to be done, then proposes a
-complete workflow architecture before building any agents.
+The skill walks the user through decisions sequentially. Each step gates the next — don't
+move forward until the current decision is made. Don't dump everything at once.
+
+**Important: Don't pre-answer questions nobody asked.** If you propose two agents, don't
+add "why NOT three agents" or "why NOT split X from Y." If the user has that question,
+they'll ask. Keep proposals clean and focused on what you're recommending, not what you're
+not recommending.
 
 **Flow:**
 
-**Step 1: Understand the full job.** Ask questions to map the complete workflow, not just
-one agent. Focus on:
+**Step 1: Understand the full job.** Ask questions to map the complete workflow. Focus on:
 - What's the end-to-end outcome? What fields get written to the record at the end?
 - What are the decision points? Are there records that should be filtered out early?
 - What data sources does each step need? (web, CRM data, connected apps)
 - Will you need to iterate on different parts independently?
 - Are there deterministic steps that don't need AI?
 
-**Proactively check for output drift risk.** Whenever an agent produces a classification,
-category, label, or any output that will be used for filtering, segmenting, or routing
-downstream, ask whether the output should pick from a **controlled list** or be
-**free-text**. Always recommend controlled list + free-text description as the default
-pattern:
-
-- A controlled list (e.g., "SaaS", "Professional Services", "Hardware") gives consistent,
-  automatable output. You can filter, segment, and route on it.
-- A free-text description (e.g., "AI-powered recruiting platform") captures nuance the
-  category loses.
-- Without a controlled list, the agent will drift — "SaaS" one run, "Cloud-based Software
-  Platform" the next, "Software as a Service" the third. This makes downstream filtering
-  useless.
-
-If the user doesn't have a list yet, help them draft one. Look at the output categories
-the agent needs to produce and ask: "Will you filter or segment on this field? If yes, it
-needs a controlled list."
-
 **Step 2: Propose the architecture.** Present a workflow diagram showing:
 - How many agents, what each one does
-- Which blocks are Custom Agents vs Code Blocks vs If/Else
-- How data flows between them (which variables feed which blocks)
-- Where gating saves cost
+- Which blocks are Custom Agents vs Code Blocks vs If/Else vs Update Record
+- How data flows between them
 - Why you chose to split (or not split) at each boundary
 
-**Proactively flag reuse opportunities.** When an agent needs web access to answer a
-specific question, it's already doing research that could serve other purposes. Flag this:
+If a research agent produces output that should be reusable, include an Update Record
+block to persist it. Call out that without this, the data only exists for that workflow run.
 
-> "This agent will visit the company's website to determine [X]. While it's there, it's
-> already gathering intelligence that could feed other workflows (e.g., company description,
-> competitive positioning, GTM motion). If you think you'll want that data later, consider
-> splitting into a research agent that saves a full brief + a focused agent that answers
-> your specific question from the brief. This adds cost now but saves re-researching later.
-> If this is the only thing you need, keep it as one agent."
+If the agent needs web access to answer a narrow question, flag the reuse opportunity:
+the agent is already visiting the website — consider whether a broader research brief
+would pay off downstream. Present as a tradeoff, not a requirement.
 
-Don't force the split — present it as a tradeoff and let the user decide. Some users are
-building fast for a demo and want to keep moving. Others are building production workflows
-and should invest in the split upfront.
+**Then stop and wait.** The user needs to approve the architecture and decide on the
+reuse question before anything else. Do not propose taxonomies, output schemas, or test
+cases yet.
 
-**Always include data persistence in the workflow.** When a research agent produces output
-that should be reusable, the workflow must include an Update Record block to save that
-data back to the record. If it's only passed as a variable to the next block, it exists
-for that workflow run only — future workflows can't access it. Call this out explicitly:
+**Step 3: Output design.** Once the architecture is approved, move to output design:
 
-> "The research output needs to be saved to the company record (via Update Record) so
-> future workflows and agents can access it without re-researching. Without this, the
-> research only exists as a variable within this workflow run."
+Check for drift risk: whenever an agent produces a classification, category, or label
+that will be used for filtering or routing downstream, recommend a **controlled list +
+free-text description** as the default pattern:
+- Controlled list gives consistent, automatable output
+- Free-text description captures nuance
+- Without a controlled list, output drifts ("SaaS" vs "Cloud-based Software Platform")
 
-Include the Update Record block in every proposed workflow diagram where data should persist.
+If the user doesn't have a list, help draft one. Ask: "Will you filter or segment on
+this field? If yes, it needs a controlled list."
 
-Example format:
-```
-Proposed workflow (5 blocks):
+Propose the output schema with evidence fields before decision fields. Then stop and
+wait for approval.
 
-1. Custom Agent: "Research Company" (web access ON)
-   → Visits website, collects signals, validates identity
-   → Output: research JSON
-
-2. Update Record: Save research brief
-   → Writes research output to company record attributes
-   → Makes it available to future workflows, not just this run
-
-3. Custom Agent: "Classify Company" (web access OFF)
-   → Receives {{research_company}}, picks segment/industry
-   → Output: classification JSON
-
-4. JS Code Block: "Post-processing"
-   → Deterministic mappings on classification output
-
-5. Update Record: Save classification
-   → Writes classification fields to company record
-
-Why this split:
-- Research and classification iterate independently
-- Classification rules will change frequently — don't want to re-run web research each time
-- Research is persisted to the record so future agents can consume it without re-browsing
-```
-
-**Step 3: Propose test cases.** Read `references/testing.md` and suggest a test set:
+**Step 4: Test cases.** Once the output design is approved, propose a test set:
 - Happy path cases covering the main use cases
 - Edge cases sitting on decision boundaries
 - Coverage across all output categories
-- Ask the user if they have specific records in mind or want suggestions
+- Ask if they have specific records in mind
 
-Also recommend a testing pattern (unused attributes vs test list) based on the complexity.
+Recommend a testing pattern (unused attributes vs test list). Then stop and wait.
 
-**Step 4: User reviews.** Wait for approval or adjustments on both the architecture and
-test cases before building any agents.
-
-**Step 5: Build each agent.** Once approved, produce paste-ready output for each Custom
-Agent block in the workflow, one at a time.
+**Step 5: Build.** Once everything is approved, produce paste-ready output for each
+Custom Agent block, one at a time.
 
 ### Quick Build
 
