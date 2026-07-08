@@ -82,7 +82,7 @@ Either mode can be overridden per invocation by saying "plan this" or "quick bui
 
 **Local testing loop.** Right now, iteration happens inside the Attio workflow editor -- run the agent on a record, check the output, tweak the prompt, repeat. The goal is to run and test agent prompts locally in Claude Code against a set of test cases, check outputs, and iterate until the agent is 70-90% ready. Then paste into Attio for final end-to-end testing with real web access and workflow routing. This would dramatically reduce the iteration cycles spent in the agent builder UI.
 
-**Attio code block skill.** A companion skill for generating the JavaScript code blocks that often follow Custom Agents in workflows (lookup tables, field mappings, post-processing logic). This would be a separate skill that pairs with the agent builder -- potentially bundled together in a repo of Attio workflow skills.
+**Attio code block skill.** A companion skill for the JavaScript code blocks that often follow Custom Agents in workflows (lookup tables, field mappings, post-processing logic). Attio's code block builder already has an AI agent that generates JS well -- the gap is unit testing. This skill would let you either generate the JS function locally or bring code from Attio's code builder into a local repo, then write and run unit tests against it to make sure it's bulletproof before deploying. A separate skill that pairs with the agent builder -- potentially bundled together in a repo of Attio workflow skills.
 
 ## Contributing
 
