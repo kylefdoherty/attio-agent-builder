@@ -65,6 +65,24 @@ one agent. Focus on:
 - Will you need to iterate on different parts independently?
 - Are there deterministic steps that don't need AI?
 
+**Proactively check for output drift risk.** Whenever an agent produces a classification,
+category, label, or any output that will be used for filtering, segmenting, or routing
+downstream, ask whether the output should pick from a **controlled list** or be
+**free-text**. Always recommend controlled list + free-text description as the default
+pattern:
+
+- A controlled list (e.g., "SaaS", "Professional Services", "Hardware") gives consistent,
+  automatable output. You can filter, segment, and route on it.
+- A free-text description (e.g., "AI-powered recruiting platform") captures nuance the
+  category loses.
+- Without a controlled list, the agent will drift — "SaaS" one run, "Cloud-based Software
+  Platform" the next, "Software as a Service" the third. This makes downstream filtering
+  useless.
+
+If the user doesn't have a list yet, help them draft one. Look at the output categories
+the agent needs to produce and ask: "Will you filter or segment on this field? If yes, it
+needs a controlled list."
+
 **Step 2: Propose the architecture.** Present a workflow diagram showing:
 - How many agents, what each one does
 - Which blocks are Custom Agents vs Code Blocks vs If/Else
