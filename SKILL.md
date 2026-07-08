@@ -104,29 +104,43 @@ Don't force the split — present it as a tradeoff and let the user decide. Some
 building fast for a demo and want to keep moving. Others are building production workflows
 and should invest in the split upfront.
 
+**Always include data persistence in the workflow.** When a research agent produces output
+that should be reusable, the workflow must include an Update Record block to save that
+data back to the record. If it's only passed as a variable to the next block, it exists
+for that workflow run only — future workflows can't access it. Call this out explicitly:
+
+> "The research output needs to be saved to the company record (via Update Record) so
+> future workflows and agents can access it without re-researching. Without this, the
+> research only exists as a variable within this workflow run."
+
+Include the Update Record block in every proposed workflow diagram where data should persist.
+
 Example format:
 ```
-Proposed workflow (4 blocks):
+Proposed workflow (5 blocks):
 
 1. Custom Agent: "Research Company" (web access ON)
    → Visits website, collects signals, validates identity
    → Output: research JSON
 
-2. Custom Agent: "Classify Company" (web access OFF)
+2. Update Record: Save research brief
+   → Writes research output to company record attributes
+   → Makes it available to future workflows, not just this run
+
+3. Custom Agent: "Classify Company" (web access OFF)
    → Receives {{research_company}}, picks segment/industry
    → Output: classification JSON
 
-3. JS Code Block: "Post-processing"
+4. JS Code Block: "Post-processing"
    → Deterministic mappings on classification output
 
-4. If/Else: segment = "Tech"?
-   → YES: proceed to deep research workflow
-   → NO: Update Record with classification only
+5. Update Record: Save classification
+   → Writes classification fields to company record
 
 Why this split:
 - Research and classification iterate independently
 - Classification rules will change frequently — don't want to re-run web research each time
-- Gate prevents expensive deep research on non-qualifying companies
+- Research is persisted to the record so future agents can consume it without re-browsing
 ```
 
 **Step 3: Propose test cases.** Read `references/testing.md` and suggest a test set:
